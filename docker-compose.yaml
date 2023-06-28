@@ -6,8 +6,6 @@ services:
     hostname: postgres
     container_name: postgres
     restart: always
-    networks:
-      - backend
     volumes:
       - postgresql:/var/lib/postgresql/data
     environment:
@@ -22,8 +20,6 @@ services:
     image: dpage/pgadmin4:6.21
     container_name: pgAdmin
     restart: always
-    networks:
-      - backend
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@example.com
       PGADMIN_DEFAULT_PASSWORD: password
@@ -38,6 +34,3 @@ volumes:
     driver: local
   pgadmin:
     driver: local
-
-networks:
-  backend:
