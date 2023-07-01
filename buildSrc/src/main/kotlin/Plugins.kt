@@ -1,3 +1,4 @@
+import org.jetbrains.kotlinx.serialization.gradle.SerializationGradleSubplugin
 import com.diffplug.gradle.spotless.SpotlessExtension
 import com.diffplug.gradle.spotless.SpotlessPlugin
 import com.github.gradle.node.NodePlugin
@@ -97,6 +98,16 @@ class KotlinCustomPlugin : Plugin<Project> {
         target.run{
             apply<JavaCustomPlugin>()
             apply<KotlinPluginWrapper>()
+            apply<SerializationGradleSubplugin>()
+
+            extensions.getByType<SpotlessExtension>().apply(){
+                kotlin {
+                    ktfmt().googleStyle()
+                }
+                kotlinGradle {
+                    target("*.kts")
+                }
+            }
 
             tasks.withType<KotlinCompile>().configureEach {
                 kotlinOptions {

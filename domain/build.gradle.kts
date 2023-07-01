@@ -7,5 +7,6 @@ plugins {
 }
 
 dependencies {
+    implementation(libs.ktor.serialization)
     implementation(project(":infra"))
 }

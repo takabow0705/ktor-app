@@ -1,8 +1,13 @@
 dependencyResolutionManagement {
     versionCatalogs{
         create("pluginLibs"){
-            val kotlinVersion = version("kotlin", "1.8.22")
+            val kotlinVersion = version("kotlin", "1.8.10")
             library("gradle-kotlin", "org.jetbrains.kotlin", "kotlin-gradle-plugin").versionRef(kotlinVersion)
+            library(
+                "gradle-kotlinx-serialization",
+                "org.jetbrains.kotlin.plugin.serialization",
+                "org.jetbrains.kotlin.plugin.serialization.gradle.plugin"
+            ).versionRef(kotlinVersion)
 
             val nodePluginVersion = version("node", "5.0.0")
             library("gradle-node", "com.github.node-gradle", "gradle-node-plugin").versionRef(nodePluginVersion)
