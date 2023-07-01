@@ -3,7 +3,7 @@
  */
 
 plugins {
-    id("com.github.Takabow0705.kotlin-library-conventions")
+    id("kotlin.custom.plugin")
 }
 
 dependencies {

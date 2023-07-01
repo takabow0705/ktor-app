@@ -3,7 +3,7 @@
  */
 
 plugins {
-
+    id("kotlin.custom.plugin")
 }
 
 dependencies {
