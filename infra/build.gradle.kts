@@ -7,4 +7,8 @@ plugins {
 }
 
 dependencies {
+    implementation(libs.bundles.exposed)
+    implementation(libs.postgres.driver)
+    implementation(libs.logback)
+    implementation(libs.ktor.core)
 }

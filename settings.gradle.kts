@@ -32,6 +32,15 @@ dependencyResolutionManagement {
 
             val logbackVersion = version("logback","1.2.11")
             library("logback","ch.qos.logback","logback-classic").versionRef(logbackVersion)
+
+            val exposedVersion = version("kotlin-exposed", "0.41.1")
+            library("exposed-core","org.jetbrains.exposed", "exposed-core").versionRef(exposedVersion)
+            library("exposed-dao","org.jetbrains.exposed", "exposed-dao").versionRef(exposedVersion)
+            library("exposed-jdbc","org.jetbrains.exposed", "exposed-jdbc").versionRef(exposedVersion)
+            bundle("exposed", listOf("exposed-core", "exposed-dao", "exposed-jdbc"))
+
+            val postgresJdbcDriverVersion = version("postgres", "42.6.0")
+            library("postgres-driver","org.postgresql","postgresql").versionRef(postgresJdbcDriverVersion)
         }
     }
 }
