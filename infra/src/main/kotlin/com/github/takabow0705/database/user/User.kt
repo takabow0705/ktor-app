@@ -8,7 +8,7 @@ data class User(
   val password: String,
   val userName: String,
   val isDeleted: Boolean,
-  val detail: String
+  val detail: String?
 )
 
 object Users : Table() {

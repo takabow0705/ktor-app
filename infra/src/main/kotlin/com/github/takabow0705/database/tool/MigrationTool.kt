@@ -1,19 +1,19 @@
 package com.github.takabow0705.database.tool
 
-import com.github.takabow0705.database.DatabaseFactory
+import com.github.takabow0705.database.product.*
 import com.github.takabow0705.database.user.Users
-import io.ktor.server.application.*
+import java.util.*
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.LoggerFactory
-import java.util.*
 
 internal val logger = LoggerFactory.getLogger("DatabaseMigration")
 
-fun main(args: Array<String>) {
+fun main() {
   val env = System.getProperty("app.env")
-  val inputStream = Thread.currentThread().contextClassLoader.getResourceAsStream("migration.properties")
+  val inputStream =
+    Thread.currentThread().contextClassLoader.getResourceAsStream("migration.properties")
   val properties = Properties()
   properties.load(inputStream)
 
@@ -25,7 +25,13 @@ fun main(args: Array<String>) {
 
   transaction(db) {
     logger.info("Start DB Migration. target: {}, user: {}", jdbcUrl, userName)
-    SchemaUtils.create(Users)
+    SchemaUtils.create(
+      Users,
+      EquityMaster,
+      EquityIndexFuturesMaster,
+      EquityIndexFuturesOptionMaster,
+      CurrencyMaster
+    )
     logger.info("Finish DB Migration. target: {}, user: {}", jdbcUrl, userName)
   }
 }

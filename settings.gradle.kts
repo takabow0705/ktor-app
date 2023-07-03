@@ -37,7 +37,8 @@ dependencyResolutionManagement {
             library("exposed-core","org.jetbrains.exposed", "exposed-core").versionRef(exposedVersion)
             library("exposed-dao","org.jetbrains.exposed", "exposed-dao").versionRef(exposedVersion)
             library("exposed-jdbc","org.jetbrains.exposed", "exposed-jdbc").versionRef(exposedVersion)
-            bundle("exposed", listOf("exposed-core", "exposed-dao", "exposed-jdbc"))
+            library("exposed-time","org.jetbrains.exposed", "exposed-java-time").versionRef(exposedVersion)
+            bundle("exposed", listOf("exposed-core", "exposed-dao", "exposed-jdbc", "exposed-time"))
 
             val postgresJdbcDriverVersion = version("postgres", "42.6.0")
             library("postgres-driver","org.postgresql","postgresql").versionRef(postgresJdbcDriverVersion)
