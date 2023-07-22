@@ -25,14 +25,14 @@ class UserManagementServiceImpl @Inject constructor(private val userRepository: 
     return runCatching { runBlocking { userRepository.createUser(user) } }
       .onSuccess { logger.info("Registered new User.") }
       .onFailure { e ->
-        logger.warn("User registration is failed. Caused by {}", e.printStackTrace())
+        logger.warn("User registration is failed. Caused by {}", e.message)
       }
-      .getOrNull()
+      .getOrThrow()
   }
 
   /** 指定されたユーザを無効化する */
   override fun disableUser(mailAddress: String) {
-    logger.info("Disable User")
+    logger.info("Disable User : $mailAddress")
     val user =
       runCatching { runBlocking { userRepository.findOne(mailAddress) } }
         .onFailure { e -> logger.warn("Unexpected Error occurred. {}", e.printStackTrace()) }
@@ -46,7 +46,7 @@ class UserManagementServiceImpl @Inject constructor(private val userRepository: 
 
   /** 指定されたユーザを有効化する */
   override fun enableUser(mailAddress: String) {
-    logger.info("Activate User")
+    logger.info("Activate User : $mailAddress")
     val user =
       runCatching { runBlocking { userRepository.findOne(mailAddress) } }
         .onFailure { e -> logger.warn("Unexpected Error occurred. {}", e.printStackTrace()) }

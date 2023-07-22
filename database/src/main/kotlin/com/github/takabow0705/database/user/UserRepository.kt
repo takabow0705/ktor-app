@@ -22,7 +22,7 @@ class UserRepositoryImpl : UserRepository {
 
   override suspend fun findOne(emailAddress: String): User? {
     return dbQuery {
-        Users.select { Users.emailAddress eq emailAddress and Users.isDeleted eq Op.FALSE }
+        Users.select { Users.emailAddress eq emailAddress }
           .map(::mapToUser)
       }
       .singleOrNull()
@@ -34,6 +34,7 @@ class UserRepositoryImpl : UserRepository {
       transaction {
         val insertStatment =
           Users.insert {
+            it[Users.emailAddress] = user.emailAddress
             it[Users.userName] = user.userName
             it[Users.password] = user.password
             it[Users.detail] = user.detail

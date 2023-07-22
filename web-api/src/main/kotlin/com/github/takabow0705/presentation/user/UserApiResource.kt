@@ -22,7 +22,7 @@ constructor(private val userManagementService: UserManagementService) : UserApiR
     return runCatching {
         userManagementService.register(
           User(
-            id = 0,
+            id = null,
             userName = req.userName,
             emailAddress = req.mailAddress,
             isDeleted = false,
@@ -30,6 +30,9 @@ constructor(private val userManagementService: UserManagementService) : UserApiR
             detail = req.detail
           )
         )
+      }
+      .onFailure { ex ->
+        return UserRegistrationResponse(UserApiStatus.NG, "ユーザの登録に失敗しました。")
       }
       .recoverCatching { UserRegistrationResponse(UserApiStatus.NG, "ユーザの登録に失敗しました。") }
       .mapCatching { UserRegistrationResponse(UserApiStatus.OK, "") }

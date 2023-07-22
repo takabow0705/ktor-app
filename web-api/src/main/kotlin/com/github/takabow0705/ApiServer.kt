@@ -3,13 +3,16 @@
  */
 package com.github.takabow0705
 
-import com.github.takabow0705.config.DaggerApiResourceComponent
-import com.github.takabow0705.config.routing.userApiRouting
+import com.github.takabow0705.config.configureRouting
+import com.github.takabow0705.config.configureSerialization
+import com.github.takabow0705.database.DatabaseFactory
 import io.ktor.server.application.*
-import io.ktor.server.routing.*
+import io.ktor.server.engine.*
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
 fun Application.module() {
-  routing { userApiRouting(DaggerApiResourceComponent.create().userApiResource()) }
+  DatabaseFactory.init(environment.config)
+  configureRouting()
+  configureSerialization()
 }

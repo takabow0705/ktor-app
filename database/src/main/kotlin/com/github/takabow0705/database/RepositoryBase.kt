@@ -5,5 +5,12 @@ import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransacti
 
 interface RepositoryBase {
   suspend fun <T> dbQuery(block: suspend () -> T): T =
-    newSuspendedTransaction(Dispatchers.IO) { block() }
+    newSuspendedTransaction(Dispatchers.IO) {
+      runCatching { block() }
+        .onFailure { ex ->
+          ex.printStackTrace()
+          throw ex
+        }
+        .getOrThrow()
+    }
 }

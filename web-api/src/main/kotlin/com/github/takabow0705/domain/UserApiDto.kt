@@ -1,7 +1,9 @@
 package com.github.takabow0705.domain
 
 import com.github.takabow0705.database.user.User
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class UserRegistrationRequest(
   val userName: String,
   val password: String,
@@ -9,14 +11,15 @@ data class UserRegistrationRequest(
   val detail: String?
 )
 
-data class UserRegistrationResponse(val status: UserApiStatus, val message: String)
+@Serializable data class UserRegistrationResponse(val status: UserApiStatus, val message: String)
 
-data class UserUpdateRequest(val mailAddress: String)
+@Serializable data class UserUpdateRequest(val mailAddress: String)
 
-data class UserUpdateResponse(val status: UserApiStatus, val message: String?)
+@Serializable data class UserUpdateResponse(val status: UserApiStatus, val message: String?)
 
-data class UserListResponse(val status: UserApiStatus, val list: List<UserApiView>)
+@Serializable data class UserListResponse(val status: UserApiStatus, val list: List<UserApiView>)
 
+@Serializable
 data class UserApiView(
   val userName: String,
   val mailAddress: String,
