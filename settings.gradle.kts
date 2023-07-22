@@ -10,7 +10,7 @@ import kotlin.math.log
  */
 
 rootProject.name = "kotlin-app"
-include("api", "domain", "infra")
+include("batch-api", "web-api", "database")
 
 
 dependencyResolutionManagement {
@@ -22,6 +22,10 @@ dependencyResolutionManagement {
             val kotlinTestVersion = version("kotlin","1.8.22")
             library("kotlin-test-junit","org.jetbrains.kotlin","kotlin-test-junit").versionRef(kotlinTestVersion)
             library("kotlin-test","org.jetbrains.kotlin","kotlin-test").versionRef(kotlinTestVersion)
+            bundle("test", listOf("kotlin-test-junit","kotlin-test"))
+
+            val mockKVersion = version("mockK","1.13.5")
+            library("mockk","io.mockk","mockk").versionRef(mockKVersion)
         }
         create("libs"){
             val ktorVersion = version("ktor-server","2.3.2")
@@ -29,6 +33,10 @@ dependencyResolutionManagement {
             library("ktor-netty", "io.ktor","ktor-server-netty-jvm").versionRef(ktorVersion)
             library("ktor-content","io.ktor","ktor-server-content-negotiation").versionRef(ktorVersion)
             library("ktor-serialization","io.ktor","ktor-serialization-kotlinx-json").versionRef(ktorVersion)
+
+            val dagger2Version = version("dagger2", "2.47")
+            library("dagger2", "com.google.dagger", "dagger").versionRef(dagger2Version)
+            library("dagger2-compiler", "com.google.dagger", "dagger-compiler").versionRef(dagger2Version)
 
             val logbackVersion = version("logback","1.2.11")
             library("logback","ch.qos.logback","logback-classic").versionRef(logbackVersion)
