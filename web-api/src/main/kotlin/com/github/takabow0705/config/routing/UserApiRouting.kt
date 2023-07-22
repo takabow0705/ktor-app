@@ -1,8 +1,8 @@
 package com.github.takabow0705.config.routing
 
-import com.github.takabow0705.domain.UserRegistrationRequest
-import com.github.takabow0705.domain.UserUpdateRequest
 import com.github.takabow0705.presentation.user.UserApiResource
+import com.github.takabow0705.presentation.user.UserRegistrationRequest
+import com.github.takabow0705.presentation.user.UserUpdateRequest
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*

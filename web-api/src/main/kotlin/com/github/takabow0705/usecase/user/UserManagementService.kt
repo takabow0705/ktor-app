@@ -1,7 +1,7 @@
 package com.github.takabow0705.usecase.user
 
-import com.github.takabow0705.database.user.User
-import com.github.takabow0705.database.user.UserRepository
+import com.github.takabow0705.domain.user.User
+import com.github.takabow0705.infrastructure.UserRepository
 import javax.inject.Inject
 import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
@@ -24,9 +24,7 @@ class UserManagementServiceImpl @Inject constructor(private val userRepository: 
   override fun register(user: User): User? {
     return runCatching { runBlocking { userRepository.createUser(user) } }
       .onSuccess { logger.info("Registered new User.") }
-      .onFailure { e ->
-        logger.warn("User registration is failed. Caused by {}", e.message)
-      }
+      .onFailure { e -> logger.warn("User registration is failed. Caused by {}", e.message) }
       .getOrThrow()
   }
 

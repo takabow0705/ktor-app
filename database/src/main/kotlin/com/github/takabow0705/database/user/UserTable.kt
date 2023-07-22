@@ -2,22 +2,15 @@ package com.github.takabow0705.database.user
 
 import org.jetbrains.exposed.sql.Table
 
-data class User(
+data class UserTable(
   val id: Int?,
   val emailAddress: String,
   val password: String,
   val userName: String,
   val isDeleted: Boolean,
   val detail: String?
-) {
-  fun disable(): User {
-    return User(this.id, this.emailAddress, this.password, this.userName, true, this.detail)
-  }
+)
 
-  fun enable(): User {
-    return User(this.id, this.emailAddress, this.password, this.userName, false, this.detail)
-  }
-}
 
 object Users : Table() {
   val id = integer("id").autoIncrement()

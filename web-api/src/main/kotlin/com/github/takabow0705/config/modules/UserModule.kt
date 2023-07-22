@@ -1,7 +1,9 @@
 package com.github.takabow0705.config.modules
 
-import com.github.takabow0705.database.user.UserRepository
-import com.github.takabow0705.database.user.UserRepositoryImpl
+import com.github.takabow0705.database.user.UserDao
+import com.github.takabow0705.database.user.UserDaoImpl
+import com.github.takabow0705.infrastructure.UserRepository
+import com.github.takabow0705.infrastructure.UserRepositoryImpl
 import com.github.takabow0705.presentation.user.UserApiResource
 import com.github.takabow0705.presentation.user.UserApiV1Resource
 import com.github.takabow0705.usecase.user.UserManagementService
@@ -12,8 +14,13 @@ import dagger.Provides
 @Module
 class UserModule {
   @Provides
-  fun provideUserRepository(): UserRepository {
-    return UserRepositoryImpl()
+  fun provideUserDao(): UserDao {
+    return UserDaoImpl()
+  }
+
+  @Provides
+  fun provideUserRepository(userDao: UserDao): UserRepository {
+    return UserRepositoryImpl(userDao)
   }
 
   @Provides

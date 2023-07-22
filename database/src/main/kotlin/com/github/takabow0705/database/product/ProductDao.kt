@@ -1,9 +1,9 @@
 package com.github.takabow0705.database.product
 
-import com.github.takabow0705.database.RepositoryBase
+import com.github.takabow0705.database.DaoBase
 import org.jetbrains.exposed.sql.*
 
-interface EquityRepository : RepositoryBase {
+interface EquityDao : DaoBase {
   suspend fun findAll(): List<Equity>?
 
   suspend fun bulkInsert(target: List<Equity>): List<Equity>
@@ -11,7 +11,7 @@ interface EquityRepository : RepositoryBase {
   suspend fun deleteAll(): Boolean
 }
 
-interface EquityIndexFuturesRepository : RepositoryBase {
+interface EquityIndexFuturesDao : DaoBase {
   suspend fun findAll(): List<EquityIndexFuture>?
 
   suspend fun bulkInsert(target: List<EquityIndexFuture>): List<EquityIndexFuture>
@@ -19,7 +19,7 @@ interface EquityIndexFuturesRepository : RepositoryBase {
   suspend fun deleteAll(): Boolean
 }
 
-interface EquityIndexFuturesOptionRepository : RepositoryBase {
+interface EquityIndexFuturesOptionDao : DaoBase {
   suspend fun findAll(): List<EquityIndexFuturesOption>?
 
   suspend fun bulkInsert(target: List<EquityIndexFuturesOption>): List<EquityIndexFuturesOption>
@@ -27,7 +27,7 @@ interface EquityIndexFuturesOptionRepository : RepositoryBase {
   suspend fun deleteAll(): Boolean
 }
 
-interface CurrencyRepository : RepositoryBase {
+interface CurrencyDao : DaoBase {
   suspend fun findAll(): List<Currency>?
 
   suspend fun bulkInsert(target: List<Currency>): List<Currency>
@@ -35,7 +35,7 @@ interface CurrencyRepository : RepositoryBase {
   suspend fun deleteAll(): Boolean
 }
 
-class EquityRepositoryImpl : EquityRepository {
+class EquityDaoImpl : EquityDao {
   override suspend fun findAll(): List<Equity>? {
     return dbQuery { EquityMaster.selectAll().map(::mapToEquity).toList() }
   }
@@ -70,7 +70,7 @@ class EquityRepositoryImpl : EquityRepository {
     )
 }
 
-class EquityIndexFuturesRepositoryImpl : EquityIndexFuturesRepository {
+class EquityIndexFuturesDaoImpl : EquityIndexFuturesDao {
   override suspend fun findAll(): List<EquityIndexFuture>? {
     return dbQuery { EquityMaster.selectAll().map(::mapToEquityIndexFutures).toList() }
   }
@@ -105,7 +105,7 @@ class EquityIndexFuturesRepositoryImpl : EquityIndexFuturesRepository {
     )
 }
 
-class EquityIndexFuturesOptionRepositoryImpl : EquityIndexFuturesOptionRepository {
+class EquityIndexFuturesOptionDaoImpl : EquityIndexFuturesOptionDao {
   override suspend fun findAll(): List<EquityIndexFuturesOption>? {
     return dbQuery {
       EquityIndexFuturesOptionMaster.selectAll().map(::mapToEquityIndexFuturesOption).toList()
@@ -146,7 +146,7 @@ class EquityIndexFuturesOptionRepositoryImpl : EquityIndexFuturesOptionRepositor
     )
 }
 
-class CurrencyRepositoryImpl : CurrencyRepository {
+class CurrencyDaoImpl : CurrencyDao {
   override suspend fun findAll(): List<Currency>? {
     return dbQuery { CurrencyMaster.selectAll().map(::mapToCurrency).toList() }
   }

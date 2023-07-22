@@ -1,6 +1,6 @@
-package com.github.takabow0705.domain
+package com.github.takabow0705.presentation.user
 
-import com.github.takabow0705.database.user.User
+import com.github.takabow0705.domain.user.User
 import kotlinx.serialization.Serializable
 
 @Serializable
