@@ -11,7 +11,6 @@ data class UserTable(
   val detail: String?
 )
 
-
 object Users : Table() {
   val id = integer("id").autoIncrement()
   val emailAddress = varchar("email_address", 500).uniqueIndex("pk_users_emailAddress")

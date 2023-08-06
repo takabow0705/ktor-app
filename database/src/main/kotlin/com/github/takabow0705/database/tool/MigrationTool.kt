@@ -1,6 +1,9 @@
 package com.github.takabow0705.database.tool
 
-import com.github.takabow0705.database.product.*
+import com.github.takabow0705.database.product.CurrencyMaster
+import com.github.takabow0705.database.product.EquityIndexFuturesMaster
+import com.github.takabow0705.database.product.EquityIndexFuturesOptionMaster
+import com.github.takabow0705.database.product.EquityMaster
 import com.github.takabow0705.database.user.Users
 import java.util.*
 import org.jetbrains.exposed.sql.Database

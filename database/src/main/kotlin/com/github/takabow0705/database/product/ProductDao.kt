@@ -1,46 +1,51 @@
 package com.github.takabow0705.database.product
 
 import com.github.takabow0705.database.DaoBase
-import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.batchInsert
+import org.jetbrains.exposed.sql.deleteAll
+import org.jetbrains.exposed.sql.selectAll
 
 interface EquityDao : DaoBase {
-  suspend fun findAll(): List<Equity>?
+  suspend fun findAll(): List<EquityTable>
 
-  suspend fun bulkInsert(target: List<Equity>): List<Equity>
+  suspend fun bulkInsert(target: List<EquityTable>): List<EquityTable>
 
   suspend fun deleteAll(): Boolean
 }
 
 interface EquityIndexFuturesDao : DaoBase {
-  suspend fun findAll(): List<EquityIndexFuture>?
+  suspend fun findAll(): List<EquityIndexFutureTable>
 
-  suspend fun bulkInsert(target: List<EquityIndexFuture>): List<EquityIndexFuture>
+  suspend fun bulkInsert(target: List<EquityIndexFutureTable>): List<EquityIndexFutureTable>
 
   suspend fun deleteAll(): Boolean
 }
 
 interface EquityIndexFuturesOptionDao : DaoBase {
-  suspend fun findAll(): List<EquityIndexFuturesOption>?
+  suspend fun findAll(): List<EquityIndexFuturesOptionTable>
 
-  suspend fun bulkInsert(target: List<EquityIndexFuturesOption>): List<EquityIndexFuturesOption>
+  suspend fun bulkInsert(
+    target: List<EquityIndexFuturesOptionTable>
+  ): List<EquityIndexFuturesOptionTable>
 
   suspend fun deleteAll(): Boolean
 }
 
 interface CurrencyDao : DaoBase {
-  suspend fun findAll(): List<Currency>?
+  suspend fun findAll(): List<CurrencyTable>
 
-  suspend fun bulkInsert(target: List<Currency>): List<Currency>
+  suspend fun bulkInsert(target: List<CurrencyTable>): List<CurrencyTable>
 
   suspend fun deleteAll(): Boolean
 }
 
 class EquityDaoImpl : EquityDao {
-  override suspend fun findAll(): List<Equity>? {
+  override suspend fun findAll(): List<EquityTable> {
     return dbQuery { EquityMaster.selectAll().map(::mapToEquity).toList() }
   }
 
-  override suspend fun bulkInsert(target: List<Equity>): List<Equity> {
+  override suspend fun bulkInsert(target: List<EquityTable>): List<EquityTable> {
     return dbQuery {
       EquityMaster.batchInsert(target) { t ->
           this[EquityMaster.productCode] = t.productCode
@@ -60,8 +65,8 @@ class EquityDaoImpl : EquityDao {
     }
   }
 
-  private fun mapToEquity(row: ResultRow): Equity =
-    Equity(
+  private fun mapToEquity(row: ResultRow): EquityTable =
+    EquityTable(
       productCode = row[EquityMaster.productCode],
       productName = row[EquityMaster.productName],
       exchange = row[EquityMaster.exchange],
@@ -71,11 +76,13 @@ class EquityDaoImpl : EquityDao {
 }
 
 class EquityIndexFuturesDaoImpl : EquityIndexFuturesDao {
-  override suspend fun findAll(): List<EquityIndexFuture>? {
+  override suspend fun findAll(): List<EquityIndexFutureTable> {
     return dbQuery { EquityMaster.selectAll().map(::mapToEquityIndexFutures).toList() }
   }
 
-  override suspend fun bulkInsert(target: List<EquityIndexFuture>): List<EquityIndexFuture> {
+  override suspend fun bulkInsert(
+    target: List<EquityIndexFutureTable>
+  ): List<EquityIndexFutureTable> {
     return dbQuery {
       EquityIndexFuturesMaster.batchInsert(target) { t ->
           this[EquityIndexFuturesMaster.productCode] = t.productCode
@@ -95,8 +102,8 @@ class EquityIndexFuturesDaoImpl : EquityIndexFuturesDao {
     }
   }
 
-  private fun mapToEquityIndexFutures(row: ResultRow): EquityIndexFuture =
-    EquityIndexFuture(
+  private fun mapToEquityIndexFutures(row: ResultRow): EquityIndexFutureTable =
+    EquityIndexFutureTable(
       productCode = row[EquityIndexFuturesMaster.productCode],
       productName = row[EquityIndexFuturesMaster.productName],
       exchange = row[EquityIndexFuturesMaster.exchange],
@@ -106,15 +113,15 @@ class EquityIndexFuturesDaoImpl : EquityIndexFuturesDao {
 }
 
 class EquityIndexFuturesOptionDaoImpl : EquityIndexFuturesOptionDao {
-  override suspend fun findAll(): List<EquityIndexFuturesOption>? {
+  override suspend fun findAll(): List<EquityIndexFuturesOptionTable> {
     return dbQuery {
       EquityIndexFuturesOptionMaster.selectAll().map(::mapToEquityIndexFuturesOption).toList()
     }
   }
 
   override suspend fun bulkInsert(
-    target: List<EquityIndexFuturesOption>
-  ): List<EquityIndexFuturesOption> {
+    target: List<EquityIndexFuturesOptionTable>
+  ): List<EquityIndexFuturesOptionTable> {
     return dbQuery {
       EquityIndexFuturesMaster.batchInsert(target) { t ->
           this[EquityIndexFuturesOptionMaster.productCode] = t.productCode
@@ -135,8 +142,8 @@ class EquityIndexFuturesOptionDaoImpl : EquityIndexFuturesOptionDao {
     }
   }
 
-  private fun mapToEquityIndexFuturesOption(row: ResultRow): EquityIndexFuturesOption =
-    EquityIndexFuturesOption(
+  private fun mapToEquityIndexFuturesOption(row: ResultRow): EquityIndexFuturesOptionTable =
+    EquityIndexFuturesOptionTable(
       productCode = row[EquityIndexFuturesOptionMaster.productCode],
       productName = row[EquityIndexFuturesOptionMaster.productName],
       underlyingProductCode = row[EquityIndexFuturesOptionMaster.underlyingProductCode],
@@ -147,11 +154,11 @@ class EquityIndexFuturesOptionDaoImpl : EquityIndexFuturesOptionDao {
 }
 
 class CurrencyDaoImpl : CurrencyDao {
-  override suspend fun findAll(): List<Currency>? {
+  override suspend fun findAll(): List<CurrencyTable> {
     return dbQuery { CurrencyMaster.selectAll().map(::mapToCurrency).toList() }
   }
 
-  override suspend fun bulkInsert(target: List<Currency>): List<Currency> {
+  override suspend fun bulkInsert(target: List<CurrencyTable>): List<CurrencyTable> {
     return dbQuery {
       CurrencyMaster.batchInsert(target) { t ->
           this[CurrencyMaster.currencyCode] = t.currencyCode
@@ -169,8 +176,8 @@ class CurrencyDaoImpl : CurrencyDao {
     }
   }
 
-  private fun mapToCurrency(row: ResultRow): Currency =
-    Currency(
+  private fun mapToCurrency(row: ResultRow): CurrencyTable =
+    CurrencyTable(
       currencyCode = row[CurrencyMaster.currencyCode],
       currencyName = row[CurrencyMaster.currencyName],
       countryCode = row[CurrencyMaster.countryCode]

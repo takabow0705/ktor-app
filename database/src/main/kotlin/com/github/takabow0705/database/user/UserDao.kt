@@ -20,10 +20,7 @@ class UserDaoImpl : UserDao {
   }
 
   override suspend fun findOne(emailAddress: String): UserTable? {
-    return dbQuery {
-        Users.select { Users.emailAddress eq emailAddress }
-          .map(::mapToUser)
-      }
+    return dbQuery { Users.select { Users.emailAddress eq emailAddress }.map(::mapToUser) }
       .singleOrNull()
   }
 

@@ -4,7 +4,7 @@ import java.time.LocalDate
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.javatime.date
 
-data class Equity(
+data class EquityTable(
   val productCode: String,
   val productName: String,
   val exchange: String,
@@ -15,7 +15,7 @@ data class Equity(
     if (this === other) return true
     if (javaClass != other?.javaClass) return false
 
-    other as Equity
+    other as EquityTable
 
     return productCode == other.productCode
   }
@@ -25,7 +25,7 @@ data class Equity(
   }
 }
 
-data class EquityIndexFuture(
+data class EquityIndexFutureTable(
   val productCode: String,
   val productName: String,
   val exchange: String,
@@ -36,7 +36,7 @@ data class EquityIndexFuture(
     if (this === other) return true
     if (javaClass != other?.javaClass) return false
 
-    other as EquityIndexFuture
+    other as EquityIndexFutureTable
 
     return productCode == other.productCode
   }
@@ -46,11 +46,11 @@ data class EquityIndexFuture(
   }
 }
 
-data class EquityIndexFuturesOption(
+data class EquityIndexFuturesOptionTable(
   val productCode: String,
   val underlyingProductCode: String,
   val productName: String,
-  val exchange: String, /*TSE, NYSE, OSE, CME */
+  val exchange: String,
   val currency: String,
   val listedDate: LocalDate
 ) {
@@ -58,22 +58,27 @@ data class EquityIndexFuturesOption(
     if (this === other) return true
     if (javaClass != other?.javaClass) return false
 
-    other as EquityIndexFuturesOption
+    other as EquityIndexFuturesOptionTable
 
     return productCode == other.productCode
   }
 
   override fun hashCode(): Int {
+
     return productCode.hashCode()
   }
 }
 
-data class Currency(val currencyCode: String, val countryCode: String, val currencyName: String) {
+data class CurrencyTable(
+  val currencyCode: String,
+  val countryCode: String,
+  val currencyName: String
+) {
   override fun equals(other: Any?): Boolean {
     if (this === other) return true
     if (javaClass != other?.javaClass) return false
 
-    other as Currency
+    other as CurrencyTable
 
     return currencyCode == other.currencyCode
   }

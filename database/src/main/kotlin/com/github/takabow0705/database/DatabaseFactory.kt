@@ -1,6 +1,6 @@
 package com.github.takabow0705.database
 
-import io.ktor.server.config.*
+import io.ktor.server.config.ApplicationConfig
 import org.jetbrains.exposed.sql.Database
 
 object DatabaseFactory {
