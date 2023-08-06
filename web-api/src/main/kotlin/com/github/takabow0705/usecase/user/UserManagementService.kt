@@ -1,7 +1,7 @@
 package com.github.takabow0705.usecase.user
 
 import com.github.takabow0705.domain.user.User
-import com.github.takabow0705.infrastructure.UserRepository
+import com.github.takabow0705.infrastructure.user.UserRepository
 import javax.inject.Inject
 import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory

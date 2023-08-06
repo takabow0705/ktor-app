@@ -14,8 +14,9 @@ dependencies {
     implementation(libs.ktor.serialization)
     implementation(libs.bundles.exposed)
     implementation(libs.logback)
-    implementation(libs.ktor.core)
     implementation(libs.dagger2)
+    implementation(libs.ehcache)
+    implementation(libs.commons.csv)
     implementation(project(":database"))
 
     testImplementation(testLibs.kotlin.test)

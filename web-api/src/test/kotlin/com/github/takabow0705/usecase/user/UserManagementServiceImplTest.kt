@@ -1,7 +1,8 @@
 package com.github.takabow0705.usecase.user
 
 import com.github.takabow0705.database.user.UserDao
-import com.github.takabow0705.database.user.UserTable
+import com.github.takabow0705.domain.user.User
+import com.github.takabow0705.infrastructure.user.UserRepository
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
 import kotlin.test.BeforeTest
@@ -9,15 +10,17 @@ import kotlin.test.Test
 
 class UserManagementServiceImplTest {
 
-  @MockK lateinit var userRepository: UserDao
-  @MockK lateinit var user: UserTable
+  @MockK lateinit var userRepository: UserRepository
+  @MockK lateinit var userDao: UserDao
+  @MockK lateinit var user: User
   lateinit var userManagementService: UserManagementServiceImpl
   private val targetMailAddress = "test1@example.com"
 
   @BeforeTest
   fun setup() {
-    userRepository = mockk<UserDao>()
-    user = mockk<UserTable>()
+    userRepository = mockk<UserRepository>()
+    userDao = mockk<UserDao>()
+    user = mockk<User>()
     userManagementService = UserManagementServiceImpl(userRepository)
     MockKAnnotations.init(this)
   }
@@ -34,10 +37,10 @@ class UserManagementServiceImplTest {
 
   @Test
   fun disableUserWhenTargetUserExist() {
-    coEvery { userRepository.findOne(targetMailAddress) } returns
-      UserTable(1, "", "", "", false, "")
+    coEvery { userRepository.findOne(targetMailAddress) } returns User(1, "", "", "", false, "")
+
     coEvery { userRepository.updateUser(any()) } returns true
-    every { user.disable() } returns UserTable(1, "", "", "", true, "")
+    every { user.disable() } returns User(1, "", "", "", true, "")
     userManagementService = UserManagementServiceImpl(userRepository)
 
     userManagementService.disableUser(targetMailAddress)

@@ -1,4 +1,4 @@
-package com.github.takabow0705.infrastructure
+package com.github.takabow0705.infrastructure.user
 
 import com.github.takabow0705.database.user.UserDao
 import com.github.takabow0705.domain.user.User
