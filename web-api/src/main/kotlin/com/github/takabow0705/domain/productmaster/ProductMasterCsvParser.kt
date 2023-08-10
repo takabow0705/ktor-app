@@ -11,35 +11,41 @@ import org.apache.commons.csv.CSVPrinter
 import org.apache.commons.csv.CSVRecord
 
 /** 画面からアップロードされたMultiPartFileとドメインオブジェクトの相互変換を担う */
-sealed class ProductMasterCsvParser {
+sealed class ProductMasterCsvParser<T> {
   protected abstract val header: Array<String>
   protected abstract val fileName: String
-  protected abstract val mapper: Function<CSVRecord, out ProductMaster>
+  protected abstract val mapper: Function<CSVRecord, T>
+  protected abstract val entityArrayMapper: Function<T, Array<String>>
 
-  private val productMasterCsvFormat: CSVFormat =
-    CSVFormat.Builder.create(CSVFormat.EXCEL).setHeader(*header).build()
+  private val productMasterCsvFormat =
+    CSVFormat.Builder.create(CSVFormat.DEFAULT).setHeader(*header)
 
   fun parse(
     inputStream: InputStream,
-  ): List<ProductMaster> {
+  ): List<T> {
     return run {
-      productMasterCsvFormat.parse(InputStreamReader(inputStream)).map { csvRecord ->
-        mapper.apply(csvRecord)
-      }
+      productMasterCsvFormat
+        .setSkipHeaderRecord(true)
+        .build()
+        .parse(InputStreamReader(inputStream))
+        .map { csvRecord -> mapper.apply(csvRecord) }
     }
   }
 
-  fun createCsv(productMaster: Iterable<ProductMaster>): String {
+  fun createCsv(productMaster: Iterable<T>): String {
     val csv = StringWriter()
-    CSVPrinter(csv, productMasterCsvFormat).use { csvPrinter ->
-      csvPrinter.printRecord(productMaster)
+    CSVPrinter(csv, productMasterCsvFormat.build()).use { csvPrinter ->
+      productMaster
+        .map { d -> entityArrayMapper.apply(d) }
+        .forEach { arr -> csvPrinter.printRecord(*arr) }
     }
+    print(csv)
     return csv.toString()
   }
 }
 
 // 株式銘柄マスタ用
-object EquityMasterCsvParser : ProductMasterCsvParser() {
+object EquityMasterCsvParser : ProductMasterCsvParser<Equity>() {
   override val header: Array<String>
     get() = arrayOf("商品コード", "商品名", "取引所", "取引通貨", "上場日")
 
@@ -51,19 +57,30 @@ object EquityMasterCsvParser : ProductMasterCsvParser() {
       Equity(
         productCode = csvRecord.get(header[0]),
         productName = csvRecord.get(header[1]),
-        currency = csvRecord.get(header[2]),
-        exchange = csvRecord.get(header[3]),
+        exchange = csvRecord.get(header[2]),
+        currency = csvRecord.get(header[3]),
         listedDate = DateUtils.convertToLocalDate(csvRecord.get(header[4]))
       )
     }
 
+  override val entityArrayMapper: Function<Equity, Array<String>>
+    get() = Function { eq ->
+      arrayOf(
+        eq.productCode,
+        eq.productName,
+        eq.exchange,
+        eq.currency,
+        DateUtils.convertToString(eq.listedDate)
+      )
+    }
+
   fun parse(multiPartData: PartData.FileItem): List<Equity> {
-    return multiPartData.streamProvider().use { input -> super.parse(input) as List<Equity> }
+    return multiPartData.streamProvider().use { input -> super.parse(input) }
   }
 }
 
 // 株価指数先物マスタ用
-object EquityIndexFuturesMasterCsvParser : ProductMasterCsvParser() {
+object EquityIndexFuturesMasterCsvParser : ProductMasterCsvParser<EquityIndexFuture>() {
   override val header: Array<String>
     get() = arrayOf("商品コード", "商品名", "取引所", "取引通貨", "上場日")
 
@@ -75,21 +92,31 @@ object EquityIndexFuturesMasterCsvParser : ProductMasterCsvParser() {
       EquityIndexFuture(
         productCode = csvRecord.get(header[0]),
         productName = csvRecord.get(header[1]),
-        currency = csvRecord.get(header[2]),
-        exchange = csvRecord.get(header[3]),
+        exchange = csvRecord.get(header[2]),
+        currency = csvRecord.get(header[3]),
         listedDate = DateUtils.convertToLocalDate(csvRecord.get(header[4]))
       )
     }
 
-  fun parse(multiPartData: PartData.FileItem): List<EquityIndexFuture> {
-    return multiPartData.streamProvider().use { input ->
-      super.parse(input) as List<EquityIndexFuture>
+  override val entityArrayMapper: Function<EquityIndexFuture, Array<String>>
+    get() = Function { eq ->
+      arrayOf(
+        eq.productCode,
+        eq.productName,
+        eq.exchange,
+        eq.currency,
+        DateUtils.convertToString(eq.listedDate)
+      )
     }
+
+  fun parse(multiPartData: PartData.FileItem): List<EquityIndexFuture> {
+    return multiPartData.streamProvider().use { input -> super.parse(input) }
   }
 }
 
 // 株価指数先物オプションマスタ用
-object EquityIndexFuturesOptionMasterCsvParser : ProductMasterCsvParser() {
+object EquityIndexFuturesOptionMasterCsvParser :
+  ProductMasterCsvParser<EquityIndexFuturesOption>() {
   override val header: Array<String>
     get() = arrayOf("商品コード", "原資産商品コード", "商品名", "取引所", "取引通貨", "上場日")
 
@@ -102,9 +129,21 @@ object EquityIndexFuturesOptionMasterCsvParser : ProductMasterCsvParser() {
         productCode = csvRecord.get(header[0]),
         underlyingProductCode = csvRecord.get(header[1]),
         productName = csvRecord.get(header[2]),
-        currency = csvRecord.get(header[3]),
-        exchange = csvRecord.get(header[4]),
+        exchange = csvRecord.get(header[3]),
+        currency = csvRecord.get(header[4]),
         listedDate = DateUtils.convertToLocalDate(csvRecord.get(header[5]))
+      )
+    }
+
+  override val entityArrayMapper: Function<EquityIndexFuturesOption, Array<String>>
+    get() = Function { eq ->
+      arrayOf(
+        eq.productCode,
+        eq.underlyingProductCode,
+        eq.productName,
+        eq.exchange,
+        eq.currency,
+        DateUtils.convertToString(eq.listedDate)
       )
     }
 
@@ -116,7 +155,7 @@ object EquityIndexFuturesOptionMasterCsvParser : ProductMasterCsvParser() {
 }
 
 // 通貨マスタ用
-object CurrencyMasterCsvParser : ProductMasterCsvParser() {
+object CurrencyMasterCsvParser : ProductMasterCsvParser<Currency>() {
   override val header: Array<String>
     get() = arrayOf("通貨コード", "通貨名", "国コード")
 
@@ -131,6 +170,9 @@ object CurrencyMasterCsvParser : ProductMasterCsvParser() {
         countryCode = csvRecord.get(header[2])
       )
     }
+
+  override val entityArrayMapper: Function<Currency, Array<String>>
+    get() = Function { c -> arrayOf(c.currencyCode, c.currencyName, c.countryCode) }
 
   fun parse(multiPartData: PartData.FileItem): List<Currency> {
     return multiPartData.streamProvider().use { input -> super.parse(input) as List<Currency> }
