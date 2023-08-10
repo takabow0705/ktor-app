@@ -77,7 +77,7 @@ class EquityDaoImpl : EquityDao {
 
 class EquityIndexFuturesDaoImpl : EquityIndexFuturesDao {
   override suspend fun findAll(): List<EquityIndexFutureTable> {
-    return dbQuery { EquityMaster.selectAll().map(::mapToEquityIndexFutures).toList() }
+    return dbQuery { EquityIndexFuturesMaster.selectAll().map(::mapToEquityIndexFutures).toList() }
   }
 
   override suspend fun bulkInsert(
@@ -123,7 +123,7 @@ class EquityIndexFuturesOptionDaoImpl : EquityIndexFuturesOptionDao {
     target: List<EquityIndexFuturesOptionTable>
   ): List<EquityIndexFuturesOptionTable> {
     return dbQuery {
-      EquityIndexFuturesMaster.batchInsert(target) { t ->
+      EquityIndexFuturesOptionMaster.batchInsert(target) { t ->
           this[EquityIndexFuturesOptionMaster.productCode] = t.productCode
           this[EquityIndexFuturesOptionMaster.productName] = t.productName
           this[EquityIndexFuturesOptionMaster.underlyingProductCode] = t.underlyingProductCode

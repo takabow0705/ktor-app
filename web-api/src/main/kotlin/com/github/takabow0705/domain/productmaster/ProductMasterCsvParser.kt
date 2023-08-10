@@ -34,7 +34,7 @@ sealed class ProductMasterCsvParser<T> {
 
   fun createCsv(productMaster: Iterable<T>): String {
     val csv = StringWriter()
-    CSVPrinter(csv, productMasterCsvFormat.build()).use { csvPrinter ->
+    CSVPrinter(csv, productMasterCsvFormat.setSkipHeaderRecord(false).build()).use { csvPrinter ->
       productMaster
         .map { d -> entityArrayMapper.apply(d) }
         .forEach { arr -> csvPrinter.printRecord(*arr) }

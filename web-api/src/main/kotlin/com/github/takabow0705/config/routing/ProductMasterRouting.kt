@@ -31,7 +31,7 @@ fun Route.productApiRouting(productMasterApiResource: ProductMasterApiResource) 
           )
           .toString()
       )
-      call.respondBytes(productMasterApiResource.downloadEquityMaster().toByteArray())
+      call.respondBytes(productMasterApiResource.downloadEquityIndexFuturesMaster().toByteArray())
     }
 
     get("equity-index-futures-option") {
@@ -43,7 +43,9 @@ fun Route.productApiRouting(productMasterApiResource: ProductMasterApiResource) 
           )
           .toString()
       )
-      call.respondBytes(productMasterApiResource.downloadEquityMaster().toByteArray())
+      call.respondBytes(
+        productMasterApiResource.downloadEquityIndexFuturesOptionMaster().toByteArray()
+      )
     }
 
     get("currency") {
@@ -55,7 +57,7 @@ fun Route.productApiRouting(productMasterApiResource: ProductMasterApiResource) 
           )
           .toString()
       )
-      call.respondBytes(productMasterApiResource.downloadEquityMaster().toByteArray())
+      call.respondBytes(productMasterApiResource.downloadCurrencyMaster().toByteArray())
     }
 
     post("equity/upload") {
