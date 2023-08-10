@@ -50,6 +50,12 @@ dependencyResolutionManagement {
 
             val postgresJdbcDriverVersion = version("postgres", "42.6.0")
             library("postgres-driver","org.postgresql","postgresql").versionRef(postgresJdbcDriverVersion)
+
+            val ehcacheVersion = version("ehcache", "3.10.8")
+            library("ehcache","org.ehcache","ehcache").versionRef(ehcacheVersion)
+
+            val apacheCommonsCsvVersion = version("commons-csv","1.10.0")
+            library("commons-csv", "org.apache.commons", "commons-csv").versionRef(apacheCommonsCsvVersion)
         }
     }
 }

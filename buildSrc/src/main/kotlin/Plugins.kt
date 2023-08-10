@@ -61,11 +61,12 @@ class JavaCustomPlugin : Plugin<Project> {
 
             extensions.getByType<SpotlessExtension>().apply(){
                 java {
-                    importOrder()
+                    importOrder("java", "javax", "org")
                     removeUnusedImports()
                     googleJavaFormat()
                     cleanthat()
                 }
+                kotlin {  }
             }
 
             tasks.withType<JavaCompile>().configureEach {
